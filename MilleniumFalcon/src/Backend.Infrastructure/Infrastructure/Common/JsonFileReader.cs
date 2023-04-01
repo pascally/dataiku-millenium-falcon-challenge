@@ -18,10 +18,11 @@ public class JsonFileReader : IConfigFileReader
 
     private T ReadConfigFile<T>(string filePath) where T : class
     {
-        if (string.IsNullOrEmpty(filePath))
+        if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
         {
             return null;
         }
+
         T res = null;
         var serializer = new JsonSerializer();
         using (var streamReader = new StreamReader(filePath))

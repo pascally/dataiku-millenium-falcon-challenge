@@ -14,17 +14,29 @@ public class JSonFileReaderTests
     }
 
     [Test]
-    public void ReadMilleniumFalconData_Should_Throw_If_FilePath_IsNullOrEmpty()
+    public void ReadMilleniumFalconData_Should_ReturnNull_If_FilePath_IsNullOrEmpty()
     {
         Assert.IsNull(_jsonFileReader.ReadMilleniumFalconData(string.Empty));
         Assert.IsNull(_jsonFileReader.ReadMilleniumFalconData(null));
     }
 
     [Test]
-    public void ReadEmpireData_Should_Throw_If_FilePath_IsNullOrEmpty()
+    public void ReadEmpireData_Should_ReturnNull_If_FilePath_IsNullOrEmpty()
     {
         Assert.IsNull(_jsonFileReader.ReadEmpireData(string.Empty));
         Assert.IsNull(_jsonFileReader.ReadEmpireData(null));
+    }
+
+    [Test]
+    public void ReadMilleniumFalconData_Should_ReturnNull_If_FilePath_IsNotFound()
+    {
+        Assert.IsNull(_jsonFileReader.ReadMilleniumFalconData("anyfile"));
+    }
+
+    [Test]
+    public void ReadEmpireData_Should_ReturnNull_If_FilePath_IsNotFound()
+    {
+        Assert.IsNull(_jsonFileReader.ReadEmpireData("anyfile"));
     }
 
     [Test]

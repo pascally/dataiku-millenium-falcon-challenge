@@ -50,7 +50,7 @@ app.MapPost("/empire", (OnboardComputerUsecases computer, string path) =>
         return Results.UnprocessableEntity("path is empty");
     }
 
-    return Results.Accepted();//good practice would require to return Created with link to item + item data
+    return Results.Ok();//good practice would require to return Created with link to item + item data
 })
 .WithName("PostEmpireConfig")
 .WithOpenApi();

@@ -163,6 +163,11 @@ public class OnboardComputerService : OnboardComputerUsecases
 
             infos = _jsonFileReader.ReadEmpireData(pathToEmpireDatas);
 
+            if (infos != null)
+            {
+                throw new ArgumentException("Failed to read Empire config");
+            }
+
             if (infos.Countdown <= 0)
             {
                 throw new ArgumentException("Countdown cannot be under 0");
@@ -227,6 +232,11 @@ public class OnboardComputerService : OnboardComputerUsecases
             }
 
             infos = _jsonFileReader.ReadMilleniumFalconData(pathToMilleniumFalconDatas);
+
+            if (infos != null)
+            {
+                throw new ArgumentException("Failed to read Millenium falcon config");
+            }
 
             if (infos.Autonomy <= 0)
             {
