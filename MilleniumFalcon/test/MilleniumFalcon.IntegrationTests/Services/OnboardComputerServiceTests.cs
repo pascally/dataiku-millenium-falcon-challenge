@@ -1,7 +1,6 @@
-﻿using Backend.Application.Interfaces.Common;
-using Backend.Application.Interfaces.Repository;
-using Backend.Application.Services;
-using Moq;
+﻿using Backend.Application.Services;
+using Backend.Infrastructure.Common;
+using Backend.Infrastructure.Repository;
 
 namespace Backend.IntegrationTests.Services
 {
@@ -9,30 +8,19 @@ namespace Backend.IntegrationTests.Services
     public class OnboardComputerServiceTests
     {
         [Test]
-        public void Ctor_Should_Throw_If_Invalid_InputArgs()
+        [TestCase("millennium-falcon1.json", "empire1.json", 0)]
+        [TestCase("millennium-falcon1.json", "empire2.json", 0.81)]
+        [TestCase("millennium-falcon1.json", "empire3.json", 0.9)]
+        [TestCase("millennium-falcon1.json", "empire4.json", 1)]
+        public void ComputeOddsToDestination(string milleniumFalconDataPath, string empireDataPath, double expectedOdds)
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                OnboardComputerService onboardComputerService = new(null, Mock.Of<IConfigFileReader>());
-            });
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                OnboardComputerService onboardComputerService = new(Mock.Of<IRoutesRepository>(), null);
-            });
+            OnboardComputerService onboardComputerService = new(new RoutesRepository("universe.db"), new JsonFileReader());
+            onboardComputerService.LoadMilleniumFalconDatas($"{AppContext.BaseDirectory}{milleniumFalconDataPath}");
+            onboardComputerService.LoadEmpireDatas($"{AppContext.BaseDirectory}{empireDataPath}");
 
-            Assert.DoesNotThrow(() =>
-            {
-                OnboardComputerService onboardComputerService = new(Mock.Of<IRoutesRepository>(), Mock.Of<IConfigFileReader>());
-            });
-        }
+            double odds = onboardComputerService.ComputeOddsToDestination();
 
-        [Test]
-        [TestCase("")]
-        [TestCase(null)]
-        public void LoadEmpireDatas_Should_Return_False_If_InvalidInput(string pathToEmpireDatas)
-        {
-            OnboardComputerService onboardComputerService = new(Mock.Of<IRoutesRepository>(), Mock.Of<IConfigFileReader>());
-            Assert.AreEqual(false, onboardComputerService.LoadEmpireDatas(pathToEmpireDatas));
+            Assert.AreEqual(expectedOdds, odds);
         }
     }
 }

@@ -29,6 +29,12 @@
     <None Update="empire2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="empire3.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="empire4.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="millennium-falcon1.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

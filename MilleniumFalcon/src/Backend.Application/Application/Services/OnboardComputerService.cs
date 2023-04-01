@@ -11,11 +11,11 @@ namespace Backend.Application.Services
         private IRoutesRepository _routesRepository;
         private IConfigFileReader _jsonFileReader;
 
-        private Dictionary<string, Planet> Map { get; } = new();
-        private string Departure { get; set; }
-        private string Destination { get; set; }
+        public Dictionary<string, Planet> Map { get; } = new();
+        public string Departure { get; private set; } = string.Empty;
+        public string Destination { get; private set; } = string.Empty;
 
-        private int Countdown { get; set; }
+        public int Countdown { get; private set; }
 
         public int SpaceshipAutonomy { get; private set; }
 
@@ -45,7 +45,7 @@ namespace Backend.Application.Services
             //with the best solution on the top
             PriorityQueue<List<Planet>, double> solutions = new();
 
-            if (!Map.ContainsKey(Destination) || !Map.ContainsKey(Departure))
+            if (!Map.ContainsKey(Destination) || !Map.ContainsKey(Departure) || Countdown == 0)
             {
                 return 0.0;
             }
@@ -71,64 +71,93 @@ namespace Backend.Application.Services
         /// <param name="currentFuel">Current level of Fuel</param>
         /// <param name="currentLocation">Current Planet location</param>
         /// <param name="currentDay">Current Day</param>
-        /// <param name="nbEncounterBountyHunters">Current number of encounter with Bounty Hunters</param>
-        /// <param name="oddsToGetCaptured">Odds to get captured by Bounty Hunter</param>
-        /// <param name="planets">Current Planets visited</param>
+        /// <param name="currentNbEncounterBountyHunters">Current number of encounter with Bounty Hunters</param>
+        /// <param name="currentOddsToGetCaptured">Odds to get captured by Bounty Hunter</param>
+        /// <param name="planetsVisited">Current Planets visited</param>
         /// <param name="solutions">List of all possibles path from Departure and Destination planets</param>
-        private void FindPath(int currentFuel, Planet currentLocation, int currentDay, int nbEncounterBountyHunters, double oddsToGetCaptured, List<Planet> planets, PriorityQueue<List<Planet>, double> solutions)
+        private void FindPath(
+            int currentFuel, 
+            Planet currentLocation, 
+            int currentDay, 
+            int currentNbEncounterBountyHunters, 
+            double currentOddsToGetCaptured, 
+            List<Planet> planetsVisited,
+            PriorityQueue<List<Planet>, double> solutions)
         {
+            //everytime we encounter a bounty hunter the odds to get capture
+            //increase of 9^k / 10^k+1
+            //k being the number of encounter
+            if (currentLocation.HasBountyHunter(currentDay))
+            {
+                currentOddsToGetCaptured += Math.Pow(9, currentNbEncounterBountyHunters) / Math.Pow(10, currentNbEncounterBountyHunters + 1);
+                currentNbEncounterBountyHunters++;
+            }
+
             //path with no solution, either countdwon is reached or crew get captured for sure
-            if (currentDay > Countdown || oddsToGetCaptured >= 1)
+            if (currentDay > Countdown || currentOddsToGetCaptured >= 1)
             {
                 return;
             }
 
             //add current location of list of planet traversed
-            planets.Add(currentLocation);
+            planetsVisited.Add(currentLocation);
 
             //if we reached destination
             if (currentLocation.Name == Destination)
             {
                 //enqueue a copy of travel path + nb encounters with bounty hunters associated
-                solutions.Enqueue(planets, nbEncounterBountyHunters);
+                //end of this path
+                solutions.Enqueue(planetsVisited, currentOddsToGetCaptured);
                 return;
             }
 
-            //otherwise for all routes available starting the current planet within the Millenium Falcon AUTONOMY
-            foreach (Route route in currentLocation.PlanetReacheableInformations.Where(r => SpaceshipAutonomy >= r.TravelTime))
+            while (currentDay < Countdown)
             {
-                //everytime we encounter a bounty hunter even if Han Solo shoot first, the odds to get capture increase of 9^k / 10^k+1
-                //k being the number of encounter
-                if (currentLocation.HasBountyHunter(currentDay))
+                //otherwise
+                //either for that GIVEN DAY
+                //for all routes available starting the current planet within the Millenium Falcon AUTONOMY
+                //we decide to MOVE
+                foreach (Route route in
+                    currentLocation.PlanetReacheableInformations.Where(r => SpaceshipAutonomy >= r.TravelTime))
                 {
-                    oddsToGetCaptured += Math.Pow(9, nbEncounterBountyHunters) / Math.Pow(10, nbEncounterBountyHunters + 1);
-                    nbEncounterBountyHunters++;
-                }
+                    //take a copy of currentDay + currentFuel + currentNbEncounterBountyHunters + currentOddsToGetCaptured
+                    //as depending of each route taken, theses values can change
+                    //we pass a COPY of the current list of planets traversed up until now too
+                    int fuel = currentFuel;
+                    int day = currentDay;
+                    int nbEncounterBountyHunters = currentNbEncounterBountyHunters;
+                    double oddsToGetCaptured = currentOddsToGetCaptured;
 
-                //if not enough fuel , we have to refuel
-                if (route.TravelTime > currentFuel)
-                {
-                    currentFuel = SpaceshipAutonomy;
-
-                    //if bounty hunter present on that day
-                    if (currentLocation.HasBountyHunter(currentDay))
+                    //if not enough fuel , we have to refuel
+                    if (route.TravelTime > fuel)
                     {
-                        oddsToGetCaptured += Math.Pow(9, nbEncounterBountyHunters) / Math.Pow(10, nbEncounterBountyHunters + 1);
-                        nbEncounterBountyHunters++;
+                        fuel = SpaceshipAutonomy;
+
+                        //if bounty hunter present on that day
+                        if (currentLocation.HasBountyHunter(day))
+                        {
+                            oddsToGetCaptured += Math.Pow(9, nbEncounterBountyHunters) / Math.Pow(10, nbEncounterBountyHunters + 1);
+                            nbEncounterBountyHunters++;
+                        }
+                        day++;
                     }
+
+                    //we decreased the fuel level, change the current location of the spaceship, increase the day by travel time,
+                    //pass a copy of the list of solutions
+                    //and the current number of encounter with bounty hunters
+                    //we pass a COPY of the current list of planets traversed up until now
+                    FindPath(fuel - route.TravelTime, Map[route.Destination], day + route.TravelTime, nbEncounterBountyHunters, oddsToGetCaptured, new(planetsVisited), solutions);
                 }
 
-                //we decreased the fuel level, change the current location of the spaceship, increase the day by travel time, pass the list of solutions
-                //and the current number of encounter with bounty hunters
-                //we pass a COPY of the current list of planets traversed up until now
-                FindPath(currentFuel - route.TravelTime, Map[route.Destination], currentDay + route.TravelTime, nbEncounterBountyHunters, oddsToGetCaptured, new(planets), solutions);
+                //or We WAIT one day
+                currentDay++;
             }
         }
 
         /// <summary>
-        /// 
+        /// Load empire config data
         /// </summary>
-        /// <param name="pathToEmpireDatas"></param>
+        /// <param name="pathToEmpireDatas">path to json empire file config</param>
         /// <returns>
         /// False if pathToEmpireDatas is null or empty
         /// False if Countdown read is < 0
@@ -150,6 +179,8 @@ namespace Backend.Application.Services
                 {
                     throw new ArgumentException("Countdown cannot be under 0");
                 }
+
+                Countdown = infos.Countdown;
 
                 Dictionary<string, List<int>> dayWithBountyHuntersByPlanet = new();
 
@@ -186,7 +217,7 @@ namespace Backend.Application.Services
         }
 
         /// <summary>
-        /// 
+        /// Load Millenium Falcon config file
         /// </summary>
         /// <param name="pathToMilleniumFalconDatas">path to json file containing Millenium Falcon informations</param>
         /// <returns>

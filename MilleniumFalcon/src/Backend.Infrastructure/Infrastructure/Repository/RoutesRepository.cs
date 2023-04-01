@@ -14,7 +14,7 @@ namespace Backend.Infrastructure.Repository
         /// <summary>
         /// Cache of data loaded from DB
         /// </summary>
-        private List<Route> _routes = new();
+        public List<Route> Routes { get; } = new();
 
         public HashSet<string> PlanetsName { get; } = new();
 
@@ -30,7 +30,7 @@ namespace Backend.Infrastructure.Repository
 
         public IEnumerable<Route> GetRoutesByOrigin(string origin)
         {
-            return _routes.Where(r => r.Origin == origin).OrderBy(r => r.TravelTime);
+            return Routes.Where(r => r.Origin == origin).OrderBy(r => r.TravelTime);
         }
 
         public void UpdateDbPath(string dbPath)
@@ -45,7 +45,7 @@ namespace Backend.Infrastructure.Repository
         public void LoadCacheFromDatabase()
         {
             PlanetsName.Clear();
-            _routes.Clear();
+            Routes.Clear();
 
             try
             {
@@ -69,7 +69,10 @@ namespace Backend.Infrastructure.Repository
                     //only load route that are valid
                     if (!string.IsNullOrEmpty(origin) && !string.IsNullOrEmpty(destination) && travelTime > 0)
                     {
-                        _routes.Add(new Route(origin, destination, travelTime));
+                        Routes.Add(new Route(origin, destination, travelTime));
+                        //routes can be travelled both ways
+                        Routes.Add(new Route(destination, origin, travelTime));
+
                         PlanetsName.Add(origin);
                         PlanetsName.Add(destination);
                     }
