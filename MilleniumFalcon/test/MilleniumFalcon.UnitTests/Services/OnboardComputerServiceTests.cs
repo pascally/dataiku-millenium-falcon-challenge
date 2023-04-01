@@ -139,6 +139,33 @@ public class OnboardComputerServiceTests
     }
 
     [Test]
+    [TestCase("C:\\directory\\myfiles\\routeDb.db", "C:\\directory\\millenium-falcon.json", "C:\\directory\\myfiles\\routeDb.db")]
+    [TestCase("routeDb.db", "C:\\directory\\millenium-falcon.json", "C:\\directory\\routeDb.db")]
+    public void LoadMilleniumFalconData_Should_Pass_Complete_Path_To_RouteRepository(string routeDb, string milleniumFalconFile, string expectedPathToDb)
+    {
+        //setups
+        var mockConfigFileReader = new Mock<IConfigFileReader>();
+        var mockRoutesRepository = new Mock<IRoutesRepository>();
+
+        mockConfigFileReader.Setup(m => m.ReadMilleniumFalconData(It.IsAny<string>()))
+            .Returns(new MilleniumFalconConfig()
+            {
+                Autonomy = 1,
+                Departure = "Endor",
+                Arrival = "Coruscant",
+                Routes_Db = routeDb
+            });
+
+        //arrange
+        OnboardComputerService onboardComputerService = new(mockRoutesRepository.Object, mockConfigFileReader.Object);
+        bool isOk = onboardComputerService.LoadMilleniumFalconDatas(milleniumFalconFile);
+
+        //assert
+        Assert.IsTrue(isOk);
+        mockRoutesRepository.Verify(m => m.UpdateDbPath(expectedPathToDb), Times.Once);
+    }
+
+    [Test]
     public void LoadEmpireDatas_Should_Complete_Spaceship_Countdown_And_BountyHunter_Informations()
     {
         //setups
