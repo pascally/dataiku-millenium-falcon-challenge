@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.MapGet("/", () => "Hello from Pascal Ly!");
 
 app.MapPost("/milleniumfalcon", (OnboardComputerUsecases computer, string path) =>
 {
