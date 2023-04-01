@@ -43,19 +43,19 @@ public class OnboardComputerService : OnboardComputerUsecases
     {
         //use a min heap
         //with the best solution on the top
-        PriorityQueue<List<Planet>, double> solutions = new();
+        PriorityQueue<double, double> solutions = new();
 
         if (!Map.ContainsKey(Destination) || !Map.ContainsKey(Departure) || Countdown == 0)
         {
             return 0.0;
         }
 
-        FindPath(SpaceshipAutonomy, Map[Departure], 0, 0, 0.0, new List<Planet>(), solutions);
+        FindPath(SpaceshipAutonomy, Map[Departure], 0, 0, 0.0, solutions);
 
         if (solutions.Count > 0)
         {
             //we dont care about the list of planets just the priority, ie the odds to be captured here
-            solutions.TryDequeue(out var _, out double priority);
+            var priority = solutions.Dequeue();
             return 1 - priority;
         }
 
@@ -73,16 +73,16 @@ public class OnboardComputerService : OnboardComputerUsecases
     /// <param name="currentDay">Current Day</param>
     /// <param name="currentNbEncounterBountyHunters">Current number of encounter with Bounty Hunters</param>
     /// <param name="currentOddsToGetCaptured">Odds to get captured by Bounty Hunter</param>
-    /// <param name="planetsVisited">Current Planets visited</param>
-    /// <param name="solutions">List of all possibles path from Departure and Destination planets</param>
+    /// <param name="solutions">Min-heap of all the related odds to get captured linked to the different path 
+    /// when reaching Destination, sorted by Odds => first element lowest Odds, snd element snd lowest Odds etc
+    /// </param>
     private void FindPath(
         int currentFuel, 
         Planet currentLocation, 
         int currentDay, 
         int currentNbEncounterBountyHunters, 
-        double currentOddsToGetCaptured, 
-        List<Planet> planetsVisited,
-        PriorityQueue<List<Planet>, double> solutions)
+        double currentOddsToGetCaptured,
+        PriorityQueue<double, double> solutions)
     {
         //everytime we encounter a bounty hunter the odds to get capture
         //increase of 9^k / 10^k+1
@@ -99,15 +99,12 @@ public class OnboardComputerService : OnboardComputerUsecases
             return;
         }
 
-        //add current location of list of planet traversed
-        planetsVisited.Add(currentLocation);
-
         //if we reached destination
         if (currentLocation.Name == Destination)
         {
             //enqueue a copy of travel path + nb encounters with bounty hunters associated
             //end of this path
-            solutions.Enqueue(planetsVisited, currentOddsToGetCaptured);
+            solutions.Enqueue(currentOddsToGetCaptured, currentOddsToGetCaptured);
             return;
         }
 
@@ -122,7 +119,6 @@ public class OnboardComputerService : OnboardComputerUsecases
             {
                 //take a copy of currentDay + currentFuel + currentNbEncounterBountyHunters + currentOddsToGetCaptured
                 //as depending of each route taken, theses values can change
-                //we pass a COPY of the current list of planets traversed up until now too
                 int fuel = currentFuel;
                 int day = currentDay;
                 int nbEncounterBountyHunters = currentNbEncounterBountyHunters;
@@ -145,8 +141,7 @@ public class OnboardComputerService : OnboardComputerUsecases
                 //we decreased the fuel level, change the current location of the spaceship, increase the day by travel time,
                 //pass a copy of the list of solutions
                 //and the current number of encounter with bounty hunters
-                //we pass a COPY of the current list of planets traversed up until now
-                FindPath(fuel - route.TravelTime, Map[route.Destination], day + route.TravelTime, nbEncounterBountyHunters, oddsToGetCaptured, new(planetsVisited), solutions);
+                FindPath(fuel - route.TravelTime, Map[route.Destination], day + route.TravelTime, nbEncounterBountyHunters, oddsToGetCaptured, solutions);
             }
 
             //or We WAIT one day
