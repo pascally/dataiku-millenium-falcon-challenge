@@ -12,7 +12,6 @@ builder.Services.AddSingleton<IRoutesRepository>(new RoutesRepository($"{AppCont
 builder.Services.AddSingleton<IConfigFileReader, JsonFileReader>();
 builder.Services.AddSingleton<OnboardComputerUsecases, OnboardComputerService>();
 
-
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -31,12 +30,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapPost("/milleniumfalcon", ([FromServices] OnboardComputerUsecases computer, string path) =>
+app.MapPost("/milleniumfalcon", (OnboardComputerUsecases computer, string path) =>
 {
     if (string.IsNullOrEmpty(path) || !computer.LoadMilleniumFalconDatas(path))
     {
@@ -45,9 +40,10 @@ app.MapPost("/milleniumfalcon", ([FromServices] OnboardComputerUsecases computer
 
     return Results.Ok();//good practice would require to return Created with link to item + item data
 })
+.WithName("PostMilleniumFalconConfig")
 .WithOpenApi();
 
-app.MapPost("/empire", ([FromServices] OnboardComputerUsecases computer, string path) =>
+app.MapPost("/empire", (OnboardComputerUsecases computer, string path) =>
 {
     if (string.IsNullOrEmpty(path) || !computer.LoadEmpireDatas(path))
     {
@@ -56,32 +52,14 @@ app.MapPost("/empire", ([FromServices] OnboardComputerUsecases computer, string 
 
     return Results.Accepted();//good practice would require to return Created with link to item + item data
 })
+.WithName("PostEmpireConfig")
 .WithOpenApi();
 
-app.MapGet("/ComputeOdds", () =>
+app.MapGet("/successodds", (OnboardComputerUsecases computer) =>
 {
-
+    return Results.Ok(computer.ComputeOddsToDestination());
 })
-.WithOpenApi();
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
+.WithName("GetSuccessOdds")
 .WithOpenApi();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
