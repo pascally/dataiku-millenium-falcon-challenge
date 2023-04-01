@@ -41,25 +41,20 @@ public class OnboardComputerService : OnboardComputerUsecases
     /// <returns>Odds</returns>
     public double ComputeOddsToDestination()
     {
-        //use a min heap
-        //with the best solution on the top
-        PriorityQueue<double, double> solutions = new();
+        //by default we have one solution with Odds to Get Captured = 1.0
+        //any path reaching Destination will have a lower Odd
+        //here we ll always have only one element 
+        //but doing so we could add more odds later on
+        List<double> solution = new() { 1.0 };
 
         if (!Map.ContainsKey(Destination) || !Map.ContainsKey(Departure) || Countdown == 0)
         {
             return 0.0;
         }
 
-        FindPath(SpaceshipAutonomy, Map[Departure], 0, 0, 0.0, solutions);
+        FindPath(SpaceshipAutonomy, Map[Departure], 0, 0, 0.0, solution);
 
-        if (solutions.Count > 0)
-        {
-            //we dont care about the list of planets just the priority, ie the odds to be captured here
-            var priority = solutions.Dequeue();
-            return 1 - priority;
-        }
-
-        return 0.0;
+        return 1 - solution.First();
     }
 
     /// <summary>
@@ -73,8 +68,7 @@ public class OnboardComputerService : OnboardComputerUsecases
     /// <param name="currentDay">Current Day</param>
     /// <param name="currentNbEncounterBountyHunters">Current number of encounter with Bounty Hunters</param>
     /// <param name="currentOddsToGetCaptured">Odds to get captured by Bounty Hunter</param>
-    /// <param name="solutions">Min-heap of all the related odds to get captured linked to the different path 
-    /// when reaching Destination, sorted by Odds => first element lowest Odds, snd element snd lowest Odds etc
+    /// <param name="solution">List containing the best solution
     /// </param>
     private void FindPath(
         int currentFuel, 
@@ -82,7 +76,7 @@ public class OnboardComputerService : OnboardComputerUsecases
         int currentDay, 
         int currentNbEncounterBountyHunters, 
         double currentOddsToGetCaptured,
-        PriorityQueue<double, double> solutions)
+        List<double> solution)
     {
         //everytime we encounter a bounty hunter the odds to get capture
         //increase of 9^k / 10^k+1
@@ -102,9 +96,7 @@ public class OnboardComputerService : OnboardComputerUsecases
         //if we reached destination
         if (currentLocation.Name == Destination)
         {
-            //enqueue a copy of travel path + nb encounters with bounty hunters associated
-            //end of this path
-            solutions.Enqueue(currentOddsToGetCaptured, currentOddsToGetCaptured);
+            solution[0] = Math.Min(solution[0], currentOddsToGetCaptured);
             return;
         }
 
@@ -141,7 +133,7 @@ public class OnboardComputerService : OnboardComputerUsecases
                 //we decreased the fuel level, change the current location of the spaceship, increase the day by travel time,
                 //pass a copy of the list of solutions
                 //and the current number of encounter with bounty hunters
-                FindPath(fuel - route.TravelTime, Map[route.Destination], day + route.TravelTime, nbEncounterBountyHunters, oddsToGetCaptured, solutions);
+                FindPath(fuel - route.TravelTime, Map[route.Destination], day + route.TravelTime, nbEncounterBountyHunters, oddsToGetCaptured, solution);
             }
 
             //or We WAIT one day
