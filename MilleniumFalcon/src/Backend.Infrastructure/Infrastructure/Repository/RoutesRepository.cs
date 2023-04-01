@@ -39,6 +39,12 @@ public class RoutesRepository : IRoutesRepository
         {
             throw new ArgumentNullException("dbPath");
         }
+
+        if (!File.Exists(dbPath))
+        {
+            throw new ArgumentException("Database file couldnt be found");
+        }
+
         _dbPath = dbPath;
     }
 

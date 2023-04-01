@@ -1,4 +1,5 @@
-﻿using Backend.Application.Config;
+﻿using System.IO;
+using Backend.Application.Config;
 using Backend.Application.Interfaces.Common;
 using Backend.Application.Interfaces.Repository;
 using Backend.Domain.Models;
@@ -247,7 +248,9 @@ public class OnboardComputerService : OnboardComputerUsecases
                 throw new ArgumentException("Path to Routes Databases cannot be empty");
             }
 
-            _routesRepository.UpdateDbPath(infos.Routes_Db);
+            string dbPath = Path.IsPathFullyQualified(infos.Routes_Db) ? infos.Routes_Db : Path.Combine(Path.GetDirectoryName(pathToMilleniumFalconDatas), infos.Routes_Db);
+
+            _routesRepository.UpdateDbPath(dbPath);
             _routesRepository.LoadCacheFromDatabase();
 
             foreach (string name in _routesRepository.GetPlanets())
