@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.IntegrationTests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilleniumFalcon.CLI", "src\MilleniumFalcon.CLI\MilleniumFalcon.CLI.csproj", "{D2FAB34C-655C-4DEC-941B-DFA3823DEC19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilleniumFalcon.Front", "src\MilleniumFalcon.Front\MilleniumFalcon.Front.csproj", "{15AF969B-D729-471F-9106-E7F78568CD1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{D2FAB34C-655C-4DEC-941B-DFA3823DEC19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2FAB34C-655C-4DEC-941B-DFA3823DEC19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2FAB34C-655C-4DEC-941B-DFA3823DEC19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15AF969B-D729-471F-9106-E7F78568CD1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15AF969B-D729-471F-9106-E7F78568CD1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15AF969B-D729-471F-9106-E7F78568CD1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15AF969B-D729-471F-9106-E7F78568CD1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{FC9E4D12-AB09-4863-B399-0B81CBF13323} = {F9DD646E-E254-4EA2-90F0-0D8A16FC5D41}
 		{0D2C5429-0D3D-4E82-A5D7-433350B90B8B} = {F9DD646E-E254-4EA2-90F0-0D8A16FC5D41}
 		{D2FAB34C-655C-4DEC-941B-DFA3823DEC19} = {24788579-1D13-4546-8DF4-808654CB3AEE}
+		{15AF969B-D729-471F-9106-E7F78568CD1C} = {24788579-1D13-4546-8DF4-808654CB3AEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A49C9B0-EF2C-4716-8857-FC4FCA578073}

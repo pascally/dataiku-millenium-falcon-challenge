@@ -9,9 +9,9 @@ public class OnboardComputerServiceTests
 {
     [Test]
     [TestCase("millennium-falcon1.json", "empire1.json", 0)]
-    [TestCase("millennium-falcon1.json", "empire2.json", 0.81)]
-    [TestCase("millennium-falcon1.json", "empire3.json", 0.9)]
-    [TestCase("millennium-falcon1.json", "empire4.json", 1)]
+    [TestCase("millennium-falcon1.json", "empire2.json", 81.0)]
+    [TestCase("millennium-falcon1.json", "empire3.json", 90.0)]
+    [TestCase("millennium-falcon1.json", "empire4.json", 100.0)]
     public void ComputeOddsToDestination(string milleniumFalconDataPath, string empireDataPath, double expectedOdds)
     {
         OnboardComputerService onboardComputerService = new(new RoutesRepository("universe.db"), new JsonFileReader());

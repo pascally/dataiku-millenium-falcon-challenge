@@ -12,6 +12,18 @@ builder.Services.AddSingleton<IRoutesRepository>(new RoutesRepository($"{AppCont
 builder.Services.AddSingleton<IConfigFileReader, JsonFileReader>();
 builder.Services.AddSingleton<OnboardComputerUsecases, OnboardComputerService>();
 
+builder.Services.AddSingleton<OnboardComputerUsecases>(sp =>
+{
+    IConfigFileReader configFileReader = sp.GetRequiredService<IConfigFileReader>();
+    IRoutesRepository routesRepository = sp.GetRequiredService<IRoutesRepository>();
+    OnboardComputerService service = new OnboardComputerService(routesRepository, configFileReader);
+    service.LoadMilleniumFalconDatas(builder.Configuration["DefaultConfiguration:FilePath"]);
+
+    return service;
+});
+
+builder.WebHost.UseUrls(builder.Configuration["WebApiUrls:http"]);
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -29,6 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.MapGet("/", () => "Hello from Pascal Ly!");
 
 app.MapPost("/milleniumfalcon", (OnboardComputerUsecases computer, string path) =>

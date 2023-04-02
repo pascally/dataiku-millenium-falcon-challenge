@@ -345,14 +345,14 @@ public class OnboardComputerServiceTests
         isOk &= onboardComputerService.LoadEmpireDatas("anyfile");
 
         //assert
-        Assert.AreEqual(1, onboardComputerService.ComputeOddsToDestination());
+        Assert.AreEqual(100.0, onboardComputerService.ComputeOddsToDestination());
     }
 
     [Test]
     //waiting on a Planet wont help here
-    [TestCase(1, 0.9)]
+    [TestCase(1, 90.0)]
     //has the time to wait one day on Endor to avoid the Bounty Hunter
-    [TestCase(2, 1)]
+    [TestCase(2, 100.0)]
     public void ComputeOddsToDestination_Should_Decrease_Odds_When_Encountering_BountyHunters(int countdown, double expectedOdds)
     {
         //setups
@@ -458,15 +458,18 @@ public class OnboardComputerServiceTests
         bool isOk = onboardComputerService.LoadMilleniumFalconDatas("anyfile");
         isOk &= onboardComputerService.LoadEmpireDatas("anyfile");
 
+        double expectedResult = 1 - Math.Pow(9, 0) / Math.Pow(10, 1) - Math.Pow(9, 1) / Math.Pow(10, 2);
+        expectedResult *= 100.0; //in percentage
+
         //assert
-        Assert.AreEqual(1 - Math.Pow(9, 0) / Math.Pow(10, 1) - Math.Pow(9, 1) / Math.Pow(10, 2), 
+        Assert.AreEqual(expectedResult, 
             onboardComputerService.ComputeOddsToDestination());
     }
 
 
     [Test]
-    [TestCase(2, 0)]
-    [TestCase(3, 1)]
+    [TestCase(2, 0.0)]
+    [TestCase(3, 100.0)]
     public void ComputeOddsToDestination_Should_Increase_NbTravelDay_When_Refueling_And_Encountering_BountyHunters(int countdown, double expectedOdds)
     {
         //setups

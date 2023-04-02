@@ -39,7 +39,7 @@ public class OnboardComputerService : OnboardComputerUsecases
     /// <summary>
     /// Returns the odds of Success between Departure and Destination Planets
     /// </summary>
-    /// <returns>Odds</returns>
+    /// <returns>Odds in percentage</returns>
     public double ComputeOddsToDestination()
     {
         //by default we have one solution with Odds to Get Captured = 1.0
@@ -55,7 +55,7 @@ public class OnboardComputerService : OnboardComputerUsecases
 
         FindPath(SpaceshipAutonomy, Map[Departure], 0, 0, 0.0, solution);
 
-        return 1 - solution.First();
+        return (1 - solution.First()) * 100.0;
     }
 
     /// <summary>
@@ -163,7 +163,7 @@ public class OnboardComputerService : OnboardComputerUsecases
 
             infos = _jsonFileReader.ReadEmpireData(pathToEmpireDatas);
 
-            if (infos != null)
+            if (infos == null)
             {
                 throw new ArgumentException("Failed to read Empire config");
             }
@@ -233,7 +233,7 @@ public class OnboardComputerService : OnboardComputerUsecases
 
             infos = _jsonFileReader.ReadMilleniumFalconData(pathToMilleniumFalconDatas);
 
-            if (infos != null)
+            if (infos == null)
             {
                 throw new ArgumentException("Failed to read Millenium falcon config");
             }

@@ -1,0 +1,15 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome from C3PO</h1>
+    <p>Upload your Empire configuration file</p>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" asp-for="EmpireConfig" />
+        <input type="submit" />
+    </form>
+    <h1>Success RATE : @Model.responseMessage %</h1>
+</div>

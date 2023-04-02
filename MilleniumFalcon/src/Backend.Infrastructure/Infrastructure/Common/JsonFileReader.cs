@@ -20,6 +20,8 @@ public class JsonFileReader : IConfigFileReader
     {
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
         {
+            Console.WriteLine($"ReadConfigFile {filePath} =>  exists : {File.Exists(filePath)}");
+
             return null;
         }
 

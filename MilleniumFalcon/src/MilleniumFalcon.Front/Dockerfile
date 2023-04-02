@@ -10,16 +10,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/WebApplication/WebApplication.csproj", "src/WebApplication/"]
-RUN dotnet restore "src/WebApplication/WebApplication.csproj"
+COPY ["src/MilleniumFalcon.Front/MilleniumFalcon.Front.csproj", "src/MilleniumFalcon.Front/"]
+RUN dotnet restore "src/MilleniumFalcon.Front/MilleniumFalcon.Front.csproj"
 COPY . .
-WORKDIR "/src/src/WebApplication"
-RUN dotnet build "WebApplication.csproj" -c Release -o /app/build
+WORKDIR "/src/src/MilleniumFalcon.Front"
+RUN dotnet build "MilleniumFalcon.Front.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "WebApplication.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MilleniumFalcon.Front.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WebApplication.dll"]
+ENTRYPOINT ["dotnet", "MilleniumFalcon.Front.dll"]

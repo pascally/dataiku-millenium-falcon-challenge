@@ -21,18 +21,30 @@ public class RoutesRepository : IRoutesRepository
     /// <summary>
     /// Repository of routes loaded from Database
     /// </summary>
-    /// <param name="dbPath"></param>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <param name="dbPath">Path to Db source</param>
+    /// <exception cref="ArgumentNullException">if dbPath is null or empty</exception>
+    /// <exception cref="ArgumentException">if dbPath not found</exception>
     public RoutesRepository(string dbPath)
     {
         UpdateDbPath(dbPath);
     }
 
+    /// <summary>
+    /// Return Routes by origin
+    /// </summary>
+    /// <param name="origin">origin planet of routes returned</param>
+    /// <returns>routes</returns>
     public IEnumerable<Route> GetRoutesByOrigin(string origin)
     {
         return Routes.Where(r => r.Origin == origin).OrderBy(r => r.TravelTime);
     }
 
+    /// <summary>
+    /// Update the source of Db
+    /// </summary>
+    /// <param name="dbPath">New path to Db source</param>
+    /// <exception cref="ArgumentNullException">if dbPath is null or empty</exception>
+    /// <exception cref="ArgumentException">if dbPath not found</exception>
     public void UpdateDbPath(string dbPath)
     {
         if (string.IsNullOrEmpty(dbPath))
@@ -48,6 +60,9 @@ public class RoutesRepository : IRoutesRepository
         _dbPath = dbPath;
     }
 
+    /// <summary>
+    /// Load the cache from DB
+    /// </summary>
     public void LoadCacheFromDatabase()
     {
         PlanetsName.Clear();
@@ -85,9 +100,9 @@ public class RoutesRepository : IRoutesRepository
             }
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            //log
+            Console.WriteLine($"LoadCacheFromDatabase {ex.Message}");
         }
     }
 

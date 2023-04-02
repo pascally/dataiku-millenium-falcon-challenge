@@ -3,6 +3,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddHttpClient("WebAPI", client =>
+    client.BaseAddress = new Uri(builder.Configuration["WebApiUrls:http"]));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

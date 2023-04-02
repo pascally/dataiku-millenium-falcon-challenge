@@ -1,8 +1,0 @@
-C:\projets\Dataiku\MilleniumFalcon\src\WebApplication\obj\Debug\net7.0\WebApplication.csproj.AssemblyReference.cache
-C:\projets\Dataiku\MilleniumFalcon\src\WebApplication\obj\Debug\net7.0\WebApplication.GeneratedMSBuildEditorConfig.editorconfig
-C:\projets\Dataiku\MilleniumFalcon\src\WebApplication\obj\Debug\net7.0\WebApplication.AssemblyInfoInputs.cache
-C:\projets\Dataiku\MilleniumFalcon\src\WebApplication\obj\Debug\net7.0\WebApplication.AssemblyInfo.cs
-C:\projets\Dataiku\MilleniumFalcon\src\WebApplication\obj\Debug\net7.0\WebApplication.csproj.CoreCompileInputs.cache
-C:\projets\Dataiku\MilleniumFalcon\src\WebApplication\obj\Debug\net7.0\WebApplication.MvcApplicationPartsAssemblyInfo.cache
-C:\projets\Dataiku\MilleniumFalcon\src\WebApplication\obj\Debug\net7.0\WebApplication.RazorAssemblyInfo.cache
-C:\projets\Dataiku\MilleniumFalcon\src\WebApplication\obj\Debug\net7.0\WebApplication.RazorAssemblyInfo.cs
