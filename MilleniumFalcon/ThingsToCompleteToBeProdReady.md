@@ -7,17 +7,15 @@
 
 ### Setup / Deployment
 * solve the file right reading issue when launching the webapi and front end through Docker
+* launch frontend + webapi with a docker compose
 
 ### WebApi/Backend
 * Rate limiter to the number of Api Calls
 
-### Tests
-* Test coverage
-* create end-to-end testing 
-
-### Container
-* launch frontend + webapi with a docker compose
-
 ### Frontend 
 * Alert User if problems on file size or invalid input
 * Check size of uploaded file
+
+### Tests
+* Test coverage
+* create end-to-end testing 
