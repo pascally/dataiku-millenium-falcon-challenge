@@ -12,9 +12,9 @@
 
 ##### Application Usecases interface
 * [OnboardComputerUsecases](https://github.com/pascally/dataiku-millenium-falcon-challenge/tree/master/MilleniumFalcon/src/Backend.Domain/Domain/UseCases)
-        * LoadMilleniumFalconDatas
-        * LoadEmpireDatas
-        * ComputeOddsToDestination
+    * LoadMilleniumFalconDatas
+    * LoadEmpireDatas
+    * ComputeOddsToDestination
 
 ### Backend.Application
 ###### This layer contains all application logic. Dependent on the domain layer, but no dependencies on any other layer or project. This layer defines interfaces that are implemented by outside layers.
