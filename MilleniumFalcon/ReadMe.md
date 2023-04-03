@@ -36,4 +36,4 @@ with an issue regarding trying to read a host file within a docker container so 
 on that way.
 
 You will find a project presentation in [projectpresentation.md](https://github.com/pascally/dataiku-millenium-falcon-challenge/blob/master/MilleniumFalcon/projectpresentation.md)
-and a list of thing that would be good to do to truly reach prod ready situation
+and a list of [ThingsToCompleteToBeProdReady](https://github.com/pascally/dataiku-millenium-falcon-challenge/blob/master/MilleniumFalcon/ThingsToCompleteToBeProdReady.md) of thing that would be good to do to truly reach prod ready situation
