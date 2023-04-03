@@ -6,6 +6,5 @@ public interface IRoutesRepository
 {
     IEnumerable<string> GetPlanets();
     IEnumerable<Route> GetRoutesByOrigin(string origin);
-    void UpdateDbPath(string dbPath);
-    void LoadCacheFromDatabase();
+    bool LoadCacheFromDatabase(string dbPath);
 }

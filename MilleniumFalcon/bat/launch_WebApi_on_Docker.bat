@@ -1,0 +1,2 @@
+docker build -t milleniumfalcon.webapi -f .\..\src\Backend.WebApi\Dockerfile .\.. --no-cache
+docker run -ti --rm -p 5000:5000 -p 443:443 -p 80:80 -e ASPNETCORE_ENVIRONMENT=Development milleniumfalcon.webapi

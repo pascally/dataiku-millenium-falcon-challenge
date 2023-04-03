@@ -4,11 +4,10 @@ using Backend.Application.Services;
 using Backend.Domain.UseCases;
 using Backend.Infrastructure.Repository;
 using Backend.Infrastructure.Common;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile(builder.Configuration["DefaultConfiguration:FilePath"], optional: true, reloadOnChange: true);
-builder.Services.AddSingleton<IRoutesRepository>(new RoutesRepository($"{AppContext.BaseDirectory}{builder.Configuration["routes_db"]}"));
+builder.Services.AddSingleton<IRoutesRepository>(new RoutesRepository());
 builder.Services.AddSingleton<IConfigFileReader, JsonFileReader>();
 builder.Services.AddSingleton<OnboardComputerUsecases, OnboardComputerService>();
 

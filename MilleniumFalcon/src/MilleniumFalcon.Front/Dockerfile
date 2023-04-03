@@ -22,4 +22,8 @@ RUN dotnet publish "MilleniumFalcon.Front.csproj" -c Release -o /app/publish /p:
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+EXPOSE 5260
+EXPOSE 7111
+
 ENTRYPOINT ["dotnet", "MilleniumFalcon.Front.dll"]

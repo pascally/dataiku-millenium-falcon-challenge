@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Backend.Application.Config;
+﻿using Backend.Application.Config;
 using Backend.Application.Interfaces.Common;
 using Backend.Application.Interfaces.Repository;
 using Backend.Domain.Models;
@@ -30,7 +29,6 @@ public class OnboardComputerService : OnboardComputerUsecases
     {
         if (routesRepository == null) throw new ArgumentNullException("routesRepository");
         _routesRepository = routesRepository;
-        routesRepository.LoadCacheFromDatabase();
 
         if (configFileReader == null) throw new ArgumentNullException("jsonFileReader"); 
         _jsonFileReader = configFileReader;
@@ -260,8 +258,10 @@ public class OnboardComputerService : OnboardComputerUsecases
 
             string dbPath = Path.IsPathFullyQualified(infos.Routes_Db) ? infos.Routes_Db : Path.Combine(Path.GetDirectoryName(pathToMilleniumFalconDatas), infos.Routes_Db);
 
-            _routesRepository.UpdateDbPath(dbPath);
-            _routesRepository.LoadCacheFromDatabase();
+            if (!_routesRepository.LoadCacheFromDatabase(dbPath))
+            {
+                throw new ArgumentException("Failed to load routes database");
+            }
 
             foreach (string name in _routesRepository.GetPlanets())
             {

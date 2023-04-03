@@ -6,21 +6,14 @@ namespace Backend.IntegrationTests.Repository;
 public class RoutesRepositoryTests
 {
     [Test]
-    public void Ctor_Should_Throw_If_PathToDb_Is_NullOrEmpty()
-    {
-        Assert.Throws<ArgumentNullException>(() => new RoutesRepository(""));
-        Assert.Throws<ArgumentNullException>(() => new RoutesRepository(null));
-    }
-
-    [Test]
     public void LoadCacheFromDatabase_Should_Load_Routes()
     {
-        RoutesRepository repo = new($"{AppContext.BaseDirectory}universe.db");
+        RoutesRepository repo = new();
 
         Assert.IsNotNull(repo.Routes);
         Assert.AreEqual(0, repo.Routes.Count);
 
-        Assert.DoesNotThrow(() => repo.LoadCacheFromDatabase());
+        Assert.IsTrue(repo.LoadCacheFromDatabase($"{AppContext.BaseDirectory}universe.db"));
 
         Assert.AreEqual(2, repo.GetRoutesByOrigin("Tatooine").Count());
         Assert.AreEqual(3, repo.GetRoutesByOrigin("Dagobah").Count());
@@ -31,8 +24,8 @@ public class RoutesRepositoryTests
     [Test]
     public void GetRoutesByOrigin_Should_Load_Routes_That_Can_Be_Travelled_From_Origin()
     {
-        RoutesRepository repo = new($"{AppContext.BaseDirectory}universe.db");
-        Assert.DoesNotThrow(() => repo.LoadCacheFromDatabase());
+        RoutesRepository repo = new();
+        Assert.IsTrue(repo.LoadCacheFromDatabase($"{AppContext.BaseDirectory}universe.db"));
 
         Assert.AreEqual(2, repo.GetRoutesByOrigin("Tatooine").Count());
         Assert.AreEqual(3, repo.GetRoutesByOrigin("Dagobah").Count());
@@ -43,12 +36,12 @@ public class RoutesRepositoryTests
     [Test]
     public void LoadCacheFromDatabase_Should_Load_PlanetsName()
     {
-        RoutesRepository repo = new($"{AppContext.BaseDirectory}universe.db");
+        RoutesRepository repo = new();
 
         Assert.IsNotNull(repo.PlanetsName);
         Assert.AreEqual(0, repo.PlanetsName.Count);
 
-        Assert.DoesNotThrow(() => repo.LoadCacheFromDatabase());
+        Assert.IsTrue(repo.LoadCacheFromDatabase($"{AppContext.BaseDirectory}universe.db"));
 
         Assert.AreEqual(4, repo.PlanetsName.Count);
         Assert.IsTrue(repo.PlanetsName.Contains("Tatooine"));
@@ -58,24 +51,29 @@ public class RoutesRepositoryTests
     }
 
     [Test]
-    public void UpdateDbPath_Should_Throw_If_DbPath_IsNullOrEmpty()
+    public void LoadCacheFromDatabase_Should_Return_False_If_DbPath_IsNullOrEmpty()
     {
-        RoutesRepository repo = new($"{AppContext.BaseDirectory}universe.db");
+        RoutesRepository repo = new();
 
-        Assert.Throws<ArgumentNullException>(() => repo.UpdateDbPath(""));
-        Assert.Throws<ArgumentNullException>(() => repo.UpdateDbPath(null));
-
+        Assert.IsFalse(repo.LoadCacheFromDatabase(""));
+        Assert.IsFalse(repo.LoadCacheFromDatabase(null));
     }
 
     [Test]
-    public void UpdateDbPath_Should_UpdateDbPath()
+    public void LoadCacheFromDatabase_Should_Return_False_If_DbPath_IsNotFound()
     {
-        RoutesRepository repo = new($"{AppContext.BaseDirectory}universe.db");
-        Assert.DoesNotThrow(() => repo.LoadCacheFromDatabase());
+        RoutesRepository repo = new();
+        Assert.IsFalse(repo.LoadCacheFromDatabase("anyfile"));
+    }
+
+    [Test]
+    public void LoadCacheFromDatabase_Should_Update_DbSource()
+    {
+        RoutesRepository repo = new();
+        Assert.DoesNotThrow(() => repo.LoadCacheFromDatabase($"{AppContext.BaseDirectory}universe.db"));
         Assert.AreEqual(2, repo.GetRoutesByOrigin("Tatooine").Count());
 
-        repo.UpdateDbPath("wrong.db");
-        Assert.DoesNotThrow(() => repo.LoadCacheFromDatabase());
+        Assert.DoesNotThrow(() => repo.LoadCacheFromDatabase($"{AppContext.BaseDirectory}wrong.db"));
         Assert.AreEqual(0, repo.GetRoutesByOrigin("Tatooine").Count());
     }
 }

@@ -7,11 +7,6 @@ namespace Backend.Infrastructure.Repository;
 public class RoutesRepository : IRoutesRepository
 {
     /// <summary>
-    /// path to DB can be relative
-    /// </summary>
-    private string _dbPath;
-
-    /// <summary>
     /// Cache of data loaded from DB
     /// </summary>
     public List<Route> Routes { get; } = new();
@@ -21,13 +16,7 @@ public class RoutesRepository : IRoutesRepository
     /// <summary>
     /// Repository of routes loaded from Database
     /// </summary>
-    /// <param name="dbPath">Path to Db source</param>
-    /// <exception cref="ArgumentNullException">if dbPath is null or empty</exception>
-    /// <exception cref="ArgumentException">if dbPath not found</exception>
-    public RoutesRepository(string dbPath)
-    {
-        UpdateDbPath(dbPath);
-    }
+    public RoutesRepository() {}
 
     /// <summary>
     /// Return Routes by origin
@@ -40,37 +29,27 @@ public class RoutesRepository : IRoutesRepository
     }
 
     /// <summary>
-    /// Update the source of Db
-    /// </summary>
-    /// <param name="dbPath">New path to Db source</param>
-    /// <exception cref="ArgumentNullException">if dbPath is null or empty</exception>
-    /// <exception cref="ArgumentException">if dbPath not found</exception>
-    public void UpdateDbPath(string dbPath)
-    {
-        if (string.IsNullOrEmpty(dbPath))
-        {
-            throw new ArgumentNullException("dbPath");
-        }
-
-        if (!File.Exists(dbPath))
-        {
-            throw new ArgumentException("Database file couldnt be found");
-        }
-
-        _dbPath = dbPath;
-    }
-
-    /// <summary>
     /// Load the cache from DB
     /// </summary>
-    public void LoadCacheFromDatabase()
+    /// <param name="dbPath">path of the Database</param>
+    public bool LoadCacheFromDatabase(string dbPath)
     {
         PlanetsName.Clear();
         Routes.Clear();
 
         try
         {
-            using var connection = new SqliteConnection($"Data Source={_dbPath}");
+            if (string.IsNullOrEmpty(dbPath))
+            {
+                throw new ArgumentNullException("dbPath");
+            }
+
+            if (!File.Exists(dbPath))
+            {
+                throw new ArgumentException("Database file couldnt be found");
+            }
+
+            using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
 
             var command = connection.CreateCommand();
@@ -103,7 +82,10 @@ public class RoutesRepository : IRoutesRepository
         catch (Exception ex)
         {
             Console.WriteLine($"LoadCacheFromDatabase {ex.Message}");
+            return false;
         }
+
+        return true;
     }
 
     public IEnumerable<string> GetPlanets() => PlanetsName;

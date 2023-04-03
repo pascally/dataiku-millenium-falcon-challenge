@@ -5,7 +5,7 @@ using Backend.Domain.UseCases;
 using Backend.Infrastructure.Common;
 using Backend.Infrastructure.Repository;
 
-OnboardComputerUsecases onboardComputerService = new OnboardComputerService(new RoutesRepository("universe.db"), new JsonFileReader());
+OnboardComputerUsecases onboardComputerService = new OnboardComputerService(new RoutesRepository(), new JsonFileReader());
 
 switch (args.Count())
 {
@@ -24,7 +24,7 @@ switch (args.Count())
             Console.WriteLine($"Failed to load file {args[1]}");
             return;
         }
-        Console.WriteLine($"Success odds : {onboardComputerService.ComputeOddsToDestination()}");
+        Console.WriteLine($"{onboardComputerService.ComputeOddsToDestination()}");
         return;
     default:
         Console.WriteLine("Please enter filepath to millenium-falcon and empire configs files");

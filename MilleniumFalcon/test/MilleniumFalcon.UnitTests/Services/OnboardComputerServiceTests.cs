@@ -32,6 +32,7 @@ public class OnboardComputerServiceTests
     [Test]
     [TestCase("")]
     [TestCase(null)]
+    [TestCase("anyfile")]
     public void LoadEmpireDatas_Should_Return_False_If_InvalidInput(string pathToEmpireDatas)
     {
         OnboardComputerService onboardComputerService = new(Mock.Of<IRoutesRepository>(), Mock.Of<IConfigFileReader>());
@@ -110,6 +111,8 @@ public class OnboardComputerServiceTests
                 Arrival = "Coruscant",
                 Routes_Db = "routeDb"
             });
+
+        mockRoutesRepository.Setup(m => m.LoadCacheFromDatabase(It.IsAny<string>())).Returns(true);
         mockRoutesRepository.Setup(m => m.GetPlanets())
             .Returns(new List<string>()
             {
@@ -156,13 +159,15 @@ public class OnboardComputerServiceTests
                 Routes_Db = routeDb
             });
 
+        mockRoutesRepository.Setup(m => m.LoadCacheFromDatabase(It.IsAny<string>())).Returns(true);
+
         //arrange
         OnboardComputerService onboardComputerService = new(mockRoutesRepository.Object, mockConfigFileReader.Object);
         bool isOk = onboardComputerService.LoadMilleniumFalconDatas(milleniumFalconFile);
 
         //assert
         Assert.IsTrue(isOk);
-        mockRoutesRepository.Verify(m => m.UpdateDbPath(expectedPathToDb), Times.Once);
+        mockRoutesRepository.Verify(m => m.LoadCacheFromDatabase(expectedPathToDb), Times.Once);
     }
 
     [Test]
@@ -192,6 +197,7 @@ public class OnboardComputerServiceTests
                 }
             });
 
+        mockRoutesRepository.Setup(m => m.LoadCacheFromDatabase(It.IsAny<string>())).Returns(true);
         mockRoutesRepository.Setup(m => m.GetPlanets())
             .Returns(new List<string>()
             {
@@ -325,6 +331,7 @@ public class OnboardComputerServiceTests
                 Bounty_Hunters = new List<BountyHunterConfig>()
             });
 
+        mockRoutesRepository.Setup(m => m.LoadCacheFromDatabase(It.IsAny<string>())).Returns(true);
         mockRoutesRepository.Setup(m => m.GetPlanets())
             .Returns(new List<string>()
             {
@@ -381,6 +388,7 @@ public class OnboardComputerServiceTests
                 }
             });
 
+        mockRoutesRepository.Setup(m => m.LoadCacheFromDatabase(It.IsAny<string>())).Returns(true);
         mockRoutesRepository.Setup(m => m.GetPlanets())
             .Returns(new List<string>()
             {
@@ -432,6 +440,8 @@ public class OnboardComputerServiceTests
                     }
                 }
             });
+
+        mockRoutesRepository.Setup(m => m.LoadCacheFromDatabase(It.IsAny<string>())).Returns(true);
 
         mockRoutesRepository.Setup(m => m.GetPlanets())
             .Returns(new List<string>()
@@ -491,6 +501,7 @@ public class OnboardComputerServiceTests
                 //no bounty hunters
             });
 
+        mockRoutesRepository.Setup(m => m.LoadCacheFromDatabase(It.IsAny<string>())).Returns(true);
         mockRoutesRepository.Setup(m => m.GetPlanets())
             .Returns(new List<string>()
             {

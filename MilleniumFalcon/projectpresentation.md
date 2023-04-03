@@ -50,7 +50,10 @@
 
 
 ### MilleniumFalcon.CLI
-Contains the CLI project
+Contains the CLI project, when launched you can access a Swagger page [http://localhost:5000/swagger/index.html
+](
+http://localhost:5000/swagger/index.html
+)
 
 
 ### MilleniumFalcon.Front
@@ -77,7 +80,8 @@ Contains the Frond end project
 | Input         | Output        |
 | ------------- |:-------------:|
 | millennium-falcon1.json + empire1.json      | 0.0     |
-| millennium-falcon1.json + empire2.json      | 0.81    |
-| millennium-falcon1.json + empire3.json      | 0.9     |
-| millennium-falcon1.json + empire4.json      | 1.0     |
+| millennium-falcon1.json + empire2.json      | 81.0    |
+| millennium-falcon1.json + empire3.json      | 90.0    |
+| millennium-falcon1.json + empire4.json      | 100.0   |
+
 

@@ -14,7 +14,7 @@ public class OnboardComputerServiceTests
     [TestCase("millennium-falcon1.json", "empire4.json", 100.0)]
     public void ComputeOddsToDestination(string milleniumFalconDataPath, string empireDataPath, double expectedOdds)
     {
-        OnboardComputerService onboardComputerService = new(new RoutesRepository("universe.db"), new JsonFileReader());
+        OnboardComputerService onboardComputerService = new(new RoutesRepository(), new JsonFileReader());
         onboardComputerService.LoadMilleniumFalconDatas($"{AppContext.BaseDirectory}{milleniumFalconDataPath}");
         onboardComputerService.LoadEmpireDatas($"{AppContext.BaseDirectory}{empireDataPath}");
 
