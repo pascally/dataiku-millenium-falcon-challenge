@@ -47,14 +47,14 @@
         * Post
     * /successodds
         * Get
-
-
-### MilleniumFalcon.CLI
-Contains the CLI project, when launched you can access a Swagger page [http://localhost:5000/swagger/index.html
+        
+When launched you can access a Swagger page [http://localhost:5000/swagger/index.html
 ](
 http://localhost:5000/swagger/index.html
 )
 
+### MilleniumFalcon.CLI
+Contains the CLI project
 
 ### MilleniumFalcon.Front
 Contains the Frond end project
