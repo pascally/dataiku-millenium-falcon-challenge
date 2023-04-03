@@ -9,6 +9,14 @@ public class Route
     public string Destination { get; }
     public int TravelTime { get; }
 
+    /// <summary>
+    /// Route constructor
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="destination"></param>
+    /// <param name="travelTime"></param>
+    /// <exception cref="ArgumentNullException">if origin/desitination are null or empty</exception>
+    /// <exception cref="ArgumentException">if origin / destination are equal, or traveltime <= 0</exception>
     public Route(string origin, string destination, int travelTime) 
     {
         if (string.IsNullOrEmpty(origin))

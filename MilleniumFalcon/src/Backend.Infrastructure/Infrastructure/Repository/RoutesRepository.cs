@@ -88,5 +88,9 @@ public class RoutesRepository : IRoutesRepository
         return true;
     }
 
+    /// <summary>
+    /// Returns list of planets name
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<string> GetPlanets() => PlanetsName;
 }

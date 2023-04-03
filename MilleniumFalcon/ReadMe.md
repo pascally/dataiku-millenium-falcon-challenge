@@ -23,9 +23,9 @@ cd bat and launch them either manually or by command
 the package was pushed on Nugget official repository
 [https://www.nuget.org/packages/PascalLy.MilleniumFalcon.CLI/](https://www.nuget.org/packages/PascalLy.MilleniumFalcon.CLI/)
 * uninstall_CLI.bat => uninstall the CLI
-* launch_WebApi_locally.bat =>
-* launch_WebApi_on_Docker.bat => 
-* launch_Backend_And_Front.bat =>
+* launch_WebApi_locally.bat => launch the backend WebApi locally (should be accessible through http://localhost:5000)
+* launch_WebApi_on_Docker.bat => launch the backend WebApi through Docker (should be accessible through http://localhost:5000) => issue with reading a host file inside Docker container  
+* launch_Backend_And_Front.bat => launch the backend WebApi (should be accessible through http://localhost:5000) and the frontend locally (should be accessible through http://localhost:5260)
 
 You can see Dockerfile on the [CLI](https://github.com/pascally/dataiku-millenium-falcon-challenge/blob/master/MilleniumFalcon/src/MilleniumFalcon.CLI/Dockerfile) project, the [WebApi](https://github.com/pascally/dataiku-millenium-falcon-challenge/blob/master/MilleniumFalcon/src/Backend.WebApi/Dockerfile) project and the [FrontEnd](https://github.com/pascally/dataiku-millenium-falcon-challenge/blob/master/MilleniumFalcon/src/MilleniumFalcon.Front/Dockerfile) project
 A better way to deploy the application for the WebApi and Front end project at least

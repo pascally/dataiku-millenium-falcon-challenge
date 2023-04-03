@@ -57,7 +57,7 @@ public class Planet
     }
 
     /// <summary>
-    /// 
+    /// Update the bounty hunter presence, will filter out negative values
     /// </summary>
     /// <param name="days"></param>
     public void UpdateBountyHunterPresence(List<int> days)
