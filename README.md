@@ -1,4 +1,3 @@
-# Developer Technical Test @ Dataiku
 
 ## What are the odds?
 
